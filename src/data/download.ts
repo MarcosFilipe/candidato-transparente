@@ -39,7 +39,8 @@ export async function downloadCsv(
     `${prefix}_${ano}_${ufNormalized}.csv`,
     `${prefix.toLowerCase()}_${ano}_${ufNormalized}.csv`,
   ];
-  const paths = fileNames.map((fileName) => `/data/${ano}/${folder}/${fileName}`);
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const paths = fileNames.map((fileName) => `${baseUrl}data/${ano}/${folder}/${fileName}`);
 
   onProgress?.(`Baixando ${fileNames[0]}...`);
 
@@ -91,13 +92,14 @@ export async function downloadCsv(
 export async function checkFilesExist(ano: number, uf: string): Promise<boolean> {
   try {
     const ufNormalized = uf.toUpperCase();
+    const baseUrl = import.meta.env.BASE_URL || '/';
     const consultaPaths = [
-      `/data/${ano}/consulta/CONSULTA_CAND_${ano}_${ufNormalized}.csv`,
-      `/data/${ano}/consulta/consulta_cand_${ano}_${ufNormalized}.csv`,
+      `${baseUrl}data/${ano}/consulta/CONSULTA_CAND_${ano}_${ufNormalized}.csv`,
+      `${baseUrl}data/${ano}/consulta/consulta_cand_${ano}_${ufNormalized}.csv`,
     ];
     const bensPaths = [
-      `/data/${ano}/bens/BEM_CANDIDATO_${ano}_${ufNormalized}.csv`,
-      `/data/${ano}/bens/bem_candidato_${ano}_${ufNormalized}.csv`,
+      `${baseUrl}data/${ano}/bens/BEM_CANDIDATO_${ano}_${ufNormalized}.csv`,
+      `${baseUrl}data/${ano}/bens/bem_candidato_${ano}_${ufNormalized}.csv`,
     ];
 
     const [consultaRes, bensRes] = await Promise.all([
