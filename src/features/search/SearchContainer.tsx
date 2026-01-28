@@ -50,6 +50,8 @@ export function SearchContainer() {
                     status.type === 'processing';
   
   const hasData = data !== null && data.rows.length > 0;
+
+  console.log({data});
   
   return (
     <div className="space-y-6">

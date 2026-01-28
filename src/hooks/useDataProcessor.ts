@@ -39,12 +39,12 @@ export function useDataProcessor(): UseDataProcessorResult {
     abortRef.current = new AbortController();
     
     try {
-      setStatus({ type: 'downloading', file: `CONSULTA_CAND_${ano}_${uf}.csv` });
+      setStatus({ type: 'downloading', file: `consulta_cand_${ano}_${uf}.csv` });
       const candidatesCsv = await downloadCsv(ano, uf, 'consulta');
-      
+
       if (abortRef.current?.signal.aborted) return;
       
-      setStatus({ type: 'downloading', file: `BEM_CANDIDATO_${ano}_${uf}.csv` });
+      setStatus({ type: 'downloading', file: `bem_candidato_${ano}_${uf}.csv` });
       const assetsCsv = await downloadCsv(ano, uf, 'bens');
       
       if (abortRef.current?.signal.aborted) return;

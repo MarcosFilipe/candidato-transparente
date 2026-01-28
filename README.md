@@ -1,73 +1,186 @@
-# Welcome to your Lovable project
+# 🗳️ Candidato Transparente
 
-## Project info
+Uma aplicação web moderna para consulta de patrimônio de candidatos às eleições brasileiras, utilizando dados públicos do Tribunal Superior Eleitoral (TSE).
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 📋 Sobre o Projeto
 
-## How can I edit this code?
+O **Candidato Transparente** é uma ferramenta de transparência eleitoral que permite aos cidadãos consultar e analisar o patrimônio declarado pelos candidatos nas eleições brasileiras. A aplicação processa dados públicos do TSE e oferece uma interface intuitiva para busca, filtragem e visualização dessas informações.
 
-There are several ways of editing your application.
+### ✨ Funcionalidades
 
-**Use Lovable**
+- 🔍 **Busca avançada** por candidatos com filtros por:
+  - Ano da eleição
+  - Região e Estado (UF)
+  - Município
+  - Cargo
+  - Nome do candidato ou partido
+  
+- 📊 **Visualização de dados**:
+  - Tabela interativa com todos os candidatos
+  - Detalhamento completo do patrimônio por candidato
+  - Ordenação por maior/menor patrimônio ou ordem alfabética
+  
+- ⚡ **Performance otimizada**:
+  - Processamento de dados em Web Workers
+  - Cache local usando IndexedDB
+  - Carregamento progressivo de arquivos CSV grandes
+  
+- 🎨 **Interface moderna**:
+  - Design responsivo com Tailwind CSS
+  - Componentes acessíveis usando Radix UI
+  - Animações suaves com Framer Motion
+  - Suporte a tema claro/escuro
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 🚀 Tecnologias
 
-Changes made via Lovable will be committed automatically to this repo.
+- **React 18** - Biblioteca JavaScript para construção de interfaces
+- **TypeScript** - Tipagem estática para JavaScript
+- **Vite** - Build tool e dev server rápido
+- **Tailwind CSS** - Framework CSS utility-first
+- **Radix UI** - Componentes acessíveis e sem estilo
+- **Framer Motion** - Biblioteca de animações
+- **React Query** - Gerenciamento de estado do servidor
+- **PapaParse** - Parser de arquivos CSV
+- **IndexedDB (idb)** - Armazenamento local de dados
 
-**Use your preferred IDE**
+## 📦 Instalação
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Pré-requisitos
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Node.js 18+ ou Bun
+- npm, yarn ou bun
 
-Follow these steps:
+### Passos
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. Clone o repositório:
+```bash
+git clone <url-do-repositorio>
+cd candidato-transparente
 ```
 
-**Edit a file directly in GitHub**
+2. Instale as dependências:
+```bash
+npm install
+# ou
+yarn install
+# ou
+bun install
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. Inicie o servidor de desenvolvimento:
+```bash
+npm run dev
+# ou
+yarn dev
+# ou
+bun dev
+```
 
-**Use GitHub Codespaces**
+4. Acesse a aplicação em `http://localhost:8080`
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🛠️ Scripts Disponíveis
 
-## What technologies are used for this project?
+- `npm run dev` - Inicia o servidor de desenvolvimento
+- `npm run build` - Cria build de produção
+- `npm run build:dev` - Cria build em modo desenvolvimento
+- `npm run preview` - Preview do build de produção
+- `npm run lint` - Executa o linter
+- `npm run test` - Executa os testes
+- `npm run test:watch` - Executa os testes em modo watch
 
-This project is built with:
+## 📁 Estrutura do Projeto
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```
+candidato-transparente/
+├── public/
+│   └── data/
+│       └── 2024/
+│           ├── bens/          # Arquivos CSV de bens dos candidatos
+│           └── consulta/       # Arquivos CSV de consulta de candidatos
+├── src/
+│   ├── components/             # Componentes reutilizáveis
+│   │   ├── AppHeader.tsx
+│   │   └── AppFooter.tsx
+│   ├── features/
+│   │   └── search/             # Feature de busca
+│   │       ├── SearchContainer.tsx
+│   │       ├── FilterPanel.tsx
+│   │       ├── CandidateTable.tsx
+│   │       └── CandidateModal.tsx
+│   ├── hooks/                  # Custom hooks
+│   │   ├── useDataProcessor.ts
+│   │   ├── useFilters.ts
+│   │   └── useDebounce.ts
+│   ├── data/                   # Utilitários de dados
+│   │   ├── constants.ts
+│   │   ├── download.ts
+│   │   └── parse.ts
+│   ├── types/                  # Definições TypeScript
+│   │   └── tse.ts
+│   └── pages/
+│       └── Index.tsx
+├── vite.config.ts
+├── tsconfig.json
+└── package.json
+```
 
-## How can I deploy this project?
+## 📊 Dados
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+A aplicação utiliza dados públicos do TSE disponíveis em formato CSV:
 
-## Can I connect a custom domain to my Lovable project?
+- **CONSULTA_CAND**: Dados dos candidatos (nome, partido, cargo, etc.)
+- **BEM_CANDIDATO**: Dados de patrimônio declarado pelos candidatos
 
-Yes, you can!
+Os arquivos são organizados por ano e estado (UF), e são processados localmente no navegador para garantir privacidade e performance.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 🔧 Configuração
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+### Variáveis de Ambiente
+
+Não são necessárias variáveis de ambiente para o funcionamento básico da aplicação. Todos os dados são carregados localmente a partir dos arquivos CSV na pasta `public/data`.
+
+### Porta do Servidor
+
+A porta padrão é `8080`. Para alterar, edite o arquivo `vite.config.ts`:
+
+```typescript
+server: {
+  port: 8080, // Altere aqui
+}
+```
+
+## 🧪 Testes
+
+Execute os testes com:
+
+```bash
+npm run test
+```
+
+Para executar em modo watch:
+
+```bash
+npm run test:watch
+```
+
+## 📝 Licença
+
+Este projeto utiliza dados públicos do TSE e é desenvolvido para fins educacionais e de transparência pública.
+
+## 🤝 Contribuindo
+
+Contribuições são bem-vindas! Sinta-se à vontade para:
+
+1. Fazer fork do projeto
+2. Criar uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abrir um Pull Request
+
+## 📧 Contato
+
+Para dúvidas ou sugestões, abra uma issue no repositório.
+
+---
+
+Desenvolvido com ❤️ para promover transparência eleitoral no Brasil

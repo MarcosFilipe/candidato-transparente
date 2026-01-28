@@ -33,9 +33,9 @@ export function isTseNotRegistered(value: string): boolean {
  * Handles: "1234.56", "1234,56", "-1", "-3", "#NULO"
  */
 export function parseMonetaryValue(value: string): number | null {
-  if (!value) return null;
+  if (value === null || value === undefined) return null;
   
-  const trimmed = value.trim().replace(/^"|"$/g, '');
+  const trimmed = String(value).trim().replace(/^"|"$/g, '');
   
   // Check for special values
   if (isTseNull(trimmed) || isTseNotRegistered(trimmed)) {
@@ -68,9 +68,9 @@ export function parseMonetaryValue(value: string): number | null {
  * Clean TSE string value
  */
 export function cleanTseString(value: string): string {
-  if (!value) return '';
+  if (value === null || value === undefined) return '';
   
-  const trimmed = value.trim().replace(/^"|"$/g, '');
+  const trimmed = String(value).trim().replace(/^"|"$/g, '');
   
   if (isTseNull(trimmed) || isTseNotRegistered(trimmed)) {
     return '';
@@ -90,19 +90,34 @@ export function makeCompositeKey(ano: string | number, uf: string, ue: string, s
  * Parse CSV with PapaParse
  */
 export function parseCsv<T>(csvText: string): T[] {
-  const result = Papa.parse<T>(csvText, {
+  const sanitized = csvText
+    .replace(/^\uFEFF/, '')
+    .replace(/\u0000/g, '');
+
+  const result = Papa.parse<T>(sanitized, {
     header: true,
     delimiter: ';',
     quoteChar: '"',
-    skipEmptyLines: true,
-    transformHeader: (header) => header.trim().replace(/^"|"$/g, ''),
+    skipEmptyLines: 'greedy',
+    transformHeader: (header) =>
+      header
+        .trim()
+        .replace(/^"|"$/g, '')
+        .replace(/^\uFEFF/, '')
+        .toUpperCase(),
   });
   
   if (result.errors.length > 0) {
     console.warn('CSV parse warnings:', result.errors.slice(0, 5));
   }
   
-  return result.data;
+  return result.data.filter((row) =>
+    Object.values(row as Record<string, unknown>).some((value) => {
+      if (value === null || value === undefined) return false;
+      if (typeof value === 'string') return value.trim().length > 0;
+      return true;
+    })
+  );
 }
 
 /**
@@ -197,6 +212,8 @@ export function processData(
       nm_partido: cleanTseString(candidate.NM_PARTIDO),
       cd_cargo: cleanTseString(candidate.CD_CARGO),
       ds_cargo: cleanTseString(candidate.DS_CARGO),
+      cd_sit_tot_turno: cleanTseString(candidate.CD_SIT_TOT_TURNO),
+      ds_sit_tot_turno: cleanTseString(candidate.DS_SIT_TOT_TURNO),
       total_bens: totalBens,
       qtd_bens: qtdBens,
       bens,

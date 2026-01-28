@@ -1,7 +1,9 @@
-import { motion, AnimatePresence } from 'framer-motion';
+﻿import { motion, AnimatePresence } from 'framer-motion';
 import { X, User, Coins, Building, Briefcase, FileText, Package } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { formatCurrency, formatNumber } from '@/lib/format';
+import { getCandidatePhotoUrl, getStatusBadge } from '@/lib/tse';
 import type { CandidateAssetRow } from '@/types/tse';
 
 interface CandidateModalProps {
@@ -11,46 +13,62 @@ interface CandidateModalProps {
 
 export function CandidateModal({ candidate, onClose }: CandidateModalProps) {
   if (!candidate) return null;
-  
-  const validBens = candidate.bens.filter(b => b.valor !== null && b.valor > 0);
+
+  const validBens = candidate.bens.filter((b) => b.valor !== null && b.valor > 0);
   const sortedBens = [...validBens].sort((a, b) => (b.valor || 0) - (a.valor || 0));
-  
+  const photoUrl = getCandidatePhotoUrl(candidate);
+  const statusBadge = getStatusBadge(candidate.ds_sit_tot_turno);
+
   return (
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4"
         onClick={onClose}
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="bg-card border border-border rounded-xl shadow-lg max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col"
+          className="bg-card border border-border rounded-xl shadow-lg max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="app-header px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center">
-                  <User className="w-8 h-8 text-white" />
-                </div>
+          <div className="app-header px-4 sm:px-6 py-4">
+            <div className="flex items-start sm:items-center justify-between gap-3">
+              <div className="flex items-start sm:items-center gap-3 sm:gap-4">
+                <Avatar className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0">
+                  {photoUrl ? (
+                    <AvatarImage
+                      src={photoUrl}
+                      alt={`Foto de ${candidate.nm_urna_candidato}`}
+                      className="object-cover"
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : null}
+                  <AvatarFallback className="bg-white/20 text-white">
+                    <User className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                  </AvatarFallback>
+                </Avatar>
                 <div>
-                  <h2 className="text-xl font-bold text-white">
+                  <h2 className="text-lg sm:text-xl font-bold text-white leading-tight">
                     {candidate.nm_urna_candidato}
                   </h2>
-                  <div className="flex items-center gap-3 text-white/70 text-sm">
+                  <div className="flex flex-wrap items-center gap-2 text-white/70 text-xs sm:text-sm">
                     <span className="inline-flex items-center gap-1">
                       <Briefcase className="w-3.5 h-3.5" />
                       {candidate.ds_cargo}
                     </span>
-                    <span>•</span>
+                    <span className="hidden sm:inline">•</span>
                     <span>{candidate.sg_partido}</span>
-                    <span>•</span>
+                    <span className="hidden sm:inline">•</span>
                     <span>Nº {candidate.nr_candidato}</span>
+                    {statusBadge ? (
+                      <span className={statusBadge.className}>{statusBadge.label}</span>
+                    ) : null}
                   </div>
                 </div>
               </div>
@@ -58,15 +76,15 @@ export function CandidateModal({ candidate, onClose }: CandidateModalProps) {
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="text-white hover:bg-white/20"
+                className="text-white hover:bg-white/20 -mr-2"
               >
                 <X className="w-5 h-5" />
               </Button>
             </div>
           </div>
-          
+
           {/* Summary */}
-          <div className="grid grid-cols-3 gap-4 p-6 bg-muted/50 border-b border-border">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 sm:p-6 bg-muted/50 border-b border-border">
             <div className="text-center">
               <Coins className="w-6 h-6 mx-auto mb-2 text-primary" />
               <p className="text-2xl font-bold font-mono text-value-positive">
@@ -76,9 +94,7 @@ export function CandidateModal({ candidate, onClose }: CandidateModalProps) {
             </div>
             <div className="text-center">
               <Package className="w-6 h-6 mx-auto mb-2 text-primary" />
-              <p className="text-2xl font-bold">
-                {formatNumber(candidate.qtd_bens)}
-              </p>
+              <p className="text-2xl font-bold">{formatNumber(candidate.qtd_bens)}</p>
               <p className="text-xs text-muted-foreground">Bens Declarados</p>
             </div>
             <div className="text-center">
@@ -89,14 +105,14 @@ export function CandidateModal({ candidate, onClose }: CandidateModalProps) {
               <p className="text-xs text-muted-foreground">Município/UF</p>
             </div>
           </div>
-          
+
           {/* Assets list */}
-          <div className="flex-1 overflow-auto p-6 custom-scrollbar">
+          <div className="flex-1 overflow-auto p-4 sm:p-6 custom-scrollbar">
             <h3 className="flex items-center gap-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">
               <FileText className="w-4 h-4" />
               Detalhamento dos Bens
             </h3>
-            
+
             {sortedBens.length > 0 ? (
               <div className="space-y-3">
                 {sortedBens.map((bem, index) => (
@@ -131,15 +147,13 @@ export function CandidateModal({ candidate, onClose }: CandidateModalProps) {
               </div>
             )}
           </div>
-          
+
           {/* Footer */}
-          <div className="px-6 py-4 bg-muted/50 border-t border-border flex justify-between items-center">
+          <div className="px-4 sm:px-6 py-4 bg-muted/50 border-t border-border flex flex-col sm:flex-row gap-2 sm:gap-0 justify-between items-center">
             <div className="text-xs text-muted-foreground">
               Eleição: {candidate.ano} • {candidate.nm_partido}
             </div>
-            <Button onClick={onClose}>
-              Fechar
-            </Button>
+            <Button onClick={onClose}>Fechar</Button>
           </div>
         </motion.div>
       </motion.div>

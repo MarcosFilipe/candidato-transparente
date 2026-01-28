@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { Search, RotateCcw, ChevronDown, Calendar, MapPin, Building, Briefcase, ArrowUpDown } from 'lucide-react';
+﻿import { motion } from 'framer-motion';
+import { Search, RotateCcw, Calendar, MapPin, Building, Briefcase, ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -25,6 +25,8 @@ interface FilterPanelProps {
   hasData: boolean;
 }
 
+const ALL_VALUE = '__all__';
+
 export function FilterPanel({
   filters,
   setFilter,
@@ -39,7 +41,7 @@ export function FilterPanel({
   hasData,
 }: FilterPanelProps) {
   const canSearch = filters.ano && filters.uf;
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -70,7 +72,7 @@ export function FilterPanel({
             </SelectContent>
           </Select>
         </div>
-        
+
         {/* Region */}
         <div className="space-y-1.5">
           <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
@@ -78,14 +80,14 @@ export function FilterPanel({
             Região
           </label>
           <Select
-            value={filters.regiao || ''}
-            onValueChange={(v) => setFilter('regiao', v || null)}
+            value={filters.regiao || ALL_VALUE}
+            onValueChange={(v) => setFilter('regiao', v === ALL_VALUE ? null : v)}
           >
             <SelectTrigger className="bg-background">
               <SelectValue placeholder="Todas as regiões" />
             </SelectTrigger>
             <SelectContent className="bg-popover border border-border z-50">
-              <SelectItem value="">Todas as regiões</SelectItem>
+              <SelectItem value={ALL_VALUE}>Todas as regiões</SelectItem>
               {availableRegions.map((region) => (
                 <SelectItem key={region} value={region}>
                   {region}
@@ -94,7 +96,7 @@ export function FilterPanel({
             </SelectContent>
           </Select>
         </div>
-        
+
         {/* UF */}
         <div className="space-y-1.5">
           <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
@@ -117,7 +119,7 @@ export function FilterPanel({
             </SelectContent>
           </Select>
         </div>
-        
+
         {/* Search button */}
         <div className="space-y-1.5 lg:col-span-2 flex items-end gap-2">
           <Button
@@ -152,7 +154,7 @@ export function FilterPanel({
           </Button>
         </div>
       </div>
-      
+
       {/* Secondary filters (only show when data is loaded) */}
       {hasData && (
         <motion.div
@@ -168,14 +170,14 @@ export function FilterPanel({
                 Município
               </label>
               <Select
-                value={filters.municipio || ''}
-                onValueChange={(v) => setFilter('municipio', v || null)}
+                value={filters.municipio || ALL_VALUE}
+                onValueChange={(v) => setFilter('municipio', v === ALL_VALUE ? null : v)}
               >
                 <SelectTrigger className="bg-background">
                   <SelectValue placeholder="Todos os municípios" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover border border-border z-50 max-h-60">
-                  <SelectItem value="">Todos os municípios</SelectItem>
+                  <SelectItem value={ALL_VALUE}>Todos os municípios</SelectItem>
                   {availableMunicipios.map((mun) => (
                     <SelectItem key={mun.sg_ue} value={mun.sg_ue}>
                       {mun.nm_ue}
@@ -184,7 +186,7 @@ export function FilterPanel({
                 </SelectContent>
               </Select>
             </div>
-            
+
             {/* Cargo */}
             <div className="space-y-1.5">
               <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
@@ -192,14 +194,14 @@ export function FilterPanel({
                 Cargo
               </label>
               <Select
-                value={filters.cargo || ''}
-                onValueChange={(v) => setFilter('cargo', v || null)}
+                value={filters.cargo || ALL_VALUE}
+                onValueChange={(v) => setFilter('cargo', v === ALL_VALUE ? null : v)}
               >
                 <SelectTrigger className="bg-background">
                   <SelectValue placeholder="Todos os cargos" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover border border-border z-50">
-                  <SelectItem value="">Todos os cargos</SelectItem>
+                  <SelectItem value={ALL_VALUE}>Todos os cargos</SelectItem>
                   {availableCargos.map((cargo) => (
                     <SelectItem key={cargo.cd_cargo} value={cargo.cd_cargo}>
                       {cargo.ds_cargo}
@@ -208,7 +210,7 @@ export function FilterPanel({
                 </SelectContent>
               </Select>
             </div>
-            
+
             {/* Text search */}
             <div className="space-y-1.5">
               <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
@@ -222,7 +224,7 @@ export function FilterPanel({
                 className="bg-background"
               />
             </div>
-            
+
             {/* Sort */}
             <div className="space-y-1.5">
               <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">

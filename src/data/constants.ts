@@ -62,7 +62,7 @@ export const UFS: UF[] = [
 /**
  * Available election years
  */
-export const ANOS_DISPONIVEIS = [2024, 2022, 2020, 2018, 2016, 2014, 2012];
+export const ANOS_DISPONIVEIS = [2024];
 
 /**
  * Get UFs by region

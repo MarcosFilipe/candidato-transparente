@@ -23,15 +23,11 @@ export function AppHeader() {
               </p>
             </div>
           </div>
-          
+
           <div className="hidden md:flex items-center gap-4 ml-auto text-white/70 text-sm">
             <div className="flex items-center gap-2">
               <Database className="w-4 h-4" />
-              <span>Dados Abertos TSE</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              <span>CSV Latin-1</span>
+              <span>{new Date().toLocaleString()} </span>
             </div>
           </div>
         </motion.div>

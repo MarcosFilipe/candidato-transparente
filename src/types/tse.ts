@@ -15,6 +15,8 @@ export interface RawCandidateData {
   NR_CANDIDATO: string;
   SG_PARTIDO: string;
   NM_PARTIDO: string;
+  CD_SIT_TOT_TURNO: string;
+  DS_SIT_TOT_TURNO: string;
 }
 
 /**
@@ -59,6 +61,10 @@ export interface CandidateAssetRow {
   // Position
   cd_cargo: string;
   ds_cargo: string;
+
+  // Election status
+  cd_sit_tot_turno: string;
+  ds_sit_tot_turno: string;
   
   // Aggregated values
   total_bens: number;
